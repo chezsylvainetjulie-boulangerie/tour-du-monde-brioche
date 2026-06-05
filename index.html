@@ -1,0 +1,159 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Le Tour du Monde de la Brioche Chez Sylvain & Julie</title>
+  <link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css" />
+  <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+  <script src="https://unpkg.com/papaparse@5.4.1/papaparse.min.js"></script>
+  <style>
+    :root{--anthracite:#252525;--beige:#f6efe3;--kaki:#69735b;--gold:#d89a3a;--white:#fff;}
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--beige);color:var(--anthracite)}
+    .hero{padding:24px 18px 18px;text-align:center;background:linear-gradient(180deg,#fff8ec 0%,#f6efe3 100%);border-bottom:1px solid rgba(0,0,0,.08)}
+    .hero h1{margin:0 auto 8px;font-size:clamp(26px,5vw,48px);line-height:1.05;max-width:980px;letter-spacing:-.02em}
+    .hero p{margin:0 auto 16px;max-width:760px;font-size:clamp(15px,2.4vw,18px);line-height:1.5}
+    .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
+    .btn{display:inline-block;background:var(--anthracite);color:white;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700}
+    .btn.secondary{background:var(--kaki)}
+    .stats{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:10px;max-width:1080px;margin:18px auto 0;padding:0 8px}
+    .stat{background:white;border-radius:16px;padding:14px 10px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
+    .stat strong{display:block;font-size:24px;margin-bottom:2px}.stat span{font-size:13px;color:#555}
+    #map{height:70vh;min-height:520px;width:100%;background:#dbe7dc}
+    .footer{padding:14px;text-align:center;font-size:13px;color:#555;background:#fff8ec}
+    .popup-title{font-size:18px;font-weight:800;margin-bottom:6px}.popup-line{margin:4px 0}.leaflet-popup-content{font-size:14px;line-height:1.35}
+    .error{display:none;background:#fff3f3;color:#8a1f1f;padding:12px;text-align:center;font-weight:700}
+    @media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}#map{height:68vh;min-height:450px}.hero{padding-top:18px}.stat strong{font-size:21px}}
+  </style>
+</head>
+<body>
+  <section class="hero">
+    <h1>Le Tour du Monde de la Brioche Chez Sylvain & Julie</h1>
+    <p>Depuis Le Boupère et Saint-Prouant, nos brioches voyagent grâce à vous. Ajoutez votre destination et aidez-nous à découvrir jusqu'où notre brioche vendéenne est allée.</p>
+    <div class="actions">
+      <a class="btn" href="REMPLACER_PAR_LE_LIEN_DU_FORMULAIRE" target="_blank" rel="noopener">Ajouter ma destination</a>
+      <a class="btn secondary" href="https://gamma.app/docs/La-brioche-Vendeenne-qui-fait-le-tour-du-monde--jfuqj8uopuddn3z" target="_blank" rel="noopener">Découvrir le projet</a>
+    </div>
+    <div class="stats">
+      <div class="stat"><strong id="stat-count">0</strong><span>participations</span></div>
+      <div class="stat"><strong id="stat-countries">0</strong><span>pays renseignés</span></div>
+      <div class="stat"><strong id="stat-record">—</strong><span>destination la plus éloignée</span></div>
+      <div class="stat"><strong id="stat-latest">—</strong><span>dernière destination</span></div>
+    </div>
+  </section>
+  <div id="error" class="error">Impossible de charger les destinations pour le moment.</div>
+  <div id="map"></div>
+  <div class="footer">Chez Sylvain & Julie — Le Boupère • Saint-Prouant</div>
+
+<script>
+const CSV_URL = "https://docs.google.com/spreadsheets/d/e/2PACX-1vQ3jAHbUqSngEN3u6sy70VBZhhMdV-11m6zABPKfB44ihCO78r2num15FEOBcnKXCque8fqVWG22JYn/pub?gid=679171992&single=true&output=csv";
+
+const DEPARTS = [
+  { name: "Départ — Le Boupère", address: "13 rue Général de Gaulle, 85510 Le Boupère", lat: 46.7952, lng: -0.9270 },
+  { name: "Départ — Saint-Prouant", address: "18 rue de l’Océan, 85110 Saint-Prouant", lat: 46.7586, lng: -0.9580 }
+];
+const ORIGIN = DEPARTS[0];
+
+const map = L.map('map', { scrollWheelZoom: true }).setView([20, 5], 2);
+L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+  maxZoom: 18,
+  attribution: '&copy; OpenStreetMap'
+}).addTo(map);
+
+const briocheIcon = L.icon({
+  iconUrl: 'assets/brioche.png',
+  iconSize: [42, 30],
+  iconAnchor: [21, 15],
+  popupAnchor: [0, -14]
+});
+const startIcon = L.icon({
+  iconUrl: 'assets/start-here.png',
+  iconSize: [58, 58],
+  iconAnchor: [29, 58],
+  popupAnchor: [0, -56]
+});
+
+DEPARTS.forEach(d => {
+  L.marker([d.lat, d.lng], {icon: startIcon})
+   .addTo(map)
+   .bindPopup(`<div class="popup-title">${d.name}</div><div class="popup-line">${d.address}</div>`);
+});
+
+function pick(row, names){
+  for (const n of names){
+    if (row[n] !== undefined && String(row[n]).trim() !== '') return String(row[n]).trim();
+  }
+  return '';
+}
+function toNumber(v){
+  if (!v) return NaN;
+  return Number(String(v).replace(',', '.').trim());
+}
+function haversineKm(lat1, lon1, lat2, lon2){
+  const R = 6371;
+  const toRad = d => d * Math.PI / 180;
+  const dLat = toRad(lat2-lat1), dLon = toRad(lon2-lon1);
+  const a = Math.sin(dLat/2)**2 + Math.cos(toRad(lat1))*Math.cos(toRad(lat2))*Math.sin(dLon/2)**2;
+  return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1-a));
+}
+function escapeHtml(str){
+  return String(str || '').replace(/[&<>'"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]));
+}
+
+Papa.parse(CSV_URL, {
+  download: true,
+  header: true,
+  skipEmptyLines: true,
+  complete: function(results) {
+    const bounds = [];
+    let count = 0;
+    const countries = new Set();
+    let record = {km:0, name:'—'};
+    let latest = '—';
+
+    results.data.forEach((row, idx) => {
+      const lat = toNumber(pick(row, ['Latitude', 'latitude']));
+      const lng = toNumber(pick(row, ['longitude', 'Longitude', 'LONGITUDE']));
+      if (!isFinite(lat) || !isFinite(lng)) return;
+
+      const prenom = pick(row, ['👤 Prénom', 'Prénom', 'Prenom']);
+      const ville = pick(row, ['📍 Ville', 'Ville']);
+      const pays = pick(row, ['🌍 Pays', 'Pays']);
+      const mot = pick(row, ['✏️ Un petit mot !?', 'Un petit mot !?', 'Petit mot', 'Message']);
+      const adresse = pick(row, ['Adresse complète', 'Adresse complete']) || [ville, pays].filter(Boolean).join(', ');
+      const date = pick(row, ['Horodateur', 'Timestamp']);
+
+      count++;
+      if (pays) countries.add(pays.toLowerCase());
+      latest = adresse || ville || 'Nouvelle destination';
+
+      const km = haversineKm(ORIGIN.lat, ORIGIN.lng, lat, lng);
+      if (km > record.km) record = {km, name: adresse || ville || 'Destination'};
+
+      const popup = `
+        <div class="popup-title">🥐 ${escapeHtml(adresse || ville || 'Destination')}</div>
+        ${prenom ? `<div class="popup-line"><strong>Prénom :</strong> ${escapeHtml(prenom)}</div>` : ''}
+        ${mot ? `<div class="popup-line"><strong>Petit mot :</strong> ${escapeHtml(mot)}</div>` : ''}
+        ${date ? `<div class="popup-line"><strong>Ajouté le :</strong> ${escapeHtml(date)}</div>` : ''}
+        <div class="popup-line"><strong>Distance du Boupère :</strong> ${Math.round(km).toLocaleString('fr-FR')} km</div>`;
+
+      L.marker([lat, lng], {icon: briocheIcon}).addTo(map).bindPopup(popup);
+      bounds.push([lat, lng]);
+    });
+
+    document.getElementById('stat-count').textContent = count.toLocaleString('fr-FR');
+    document.getElementById('stat-countries').textContent = countries.size.toLocaleString('fr-FR');
+    document.getElementById('stat-record').textContent = record.name === '—' ? '—' : record.name;
+    document.getElementById('stat-latest').textContent = latest;
+
+    if (bounds.length) map.fitBounds(bounds.concat(DEPARTS.map(d=>[d.lat,d.lng])), {padding:[35,35]});
+  },
+  error: function(err){
+    console.error(err);
+    document.getElementById('error').style.display = 'block';
+  }
+});
+</script>
+</body>
+</html>
