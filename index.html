@@ -17,7 +17,7 @@
     .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
     .btn{display:inline-block;background:var(--anthracite);color:white;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700}
     .btn.secondary{background:var(--kaki)}
-    .stats{display:grid;grid-template-columns:repeat(4,minmax(140px,1fr));gap:10px;max-width:1080px;margin:18px auto 0;padding:0 8px}
+    .stats{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:10px;max-width:1080px;margin:18px auto 0;padding:0 8px}
     .stat{background:white;border-radius:16px;padding:14px 10px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
     .stat strong{display:block;font-size:24px;margin-bottom:2px}.stat span{font-size:13px;color:#555}
     #map{height:70vh;min-height:520px;width:100%;background:#dbe7dc}
@@ -29,19 +29,19 @@
 </head>
 <body>
   <section class="hero">
-    <img src="assets/logo.png" alt="Chez Sylvain & Julie" style="max-width:180px;margin-bottom:12px;">
+    <img src="assets/Logo.png" alt="Chez Sylvain & Julie" style="max-width:180px;margin-bottom:12px;">
     <h1>Le Tour du Monde de la Brioche Chez Sylvain & Julie</h1>
-    <p><p>Chaque brioche a une histoire. Depuis Le Boupère et Saint-Prouant, nos brioches voyagent grâce à vous. Aidez-nous à découvrir jusqu'où la brioche vendéenne peut voyager.</p>
+    <p>Chaque brioche a une histoire. Depuis Le Boupère et Saint-Prouant, nos brioches voyagent grâce à vous. Aidez-nous à découvrir jusqu'où la brioche vendéenne peut voyager.</p>
     <div class="actions">
       <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdCtjIoUGSUuk7qID04OMYwsLqVmY8P0E2uSR549nitUjlw0A/viewform?usp=dialog" target="_blank" rel="noopener">Ajouter ma destination</a>
       <a class="btn secondary" href="https://gamma.app/docs/La-brioche-Vendeenne-qui-fait-le-tour-du-monde--jfuqj8uopuddn3z" target="_blank" rel="noopener">Découvrir le projet</a>
     </div>
     <div class="stats">
   <div class="stat"><strong id="stat-count">0</strong><span>participations</span></div>
-<div class="stat"><strong id="stat-countries">0</strong><span>pays renseignés</span></div>
-<div class="stat"><strong id="stat-km">0 km</strong><span>kilomètres cumulés</span></div>
-<div class="stat"><strong id="stat-record">—</strong><span>pays le plus éloigné</span></div>
-<div class="stat"><strong id="stat-latest">—</strong><span>dernière destination</span></div>
+  <div class="stat"><strong id="stat-countries">0</strong><span>pays renseignés</span></div>
+  <div class="stat"><strong id="stat-km">0 km</strong><span>kilomètres cumulés</span></div>
+  <div class="stat"><strong id="stat-record">—</strong><span>pays le plus éloigné</span></div>
+  <div class="stat"><strong id="stat-latest">—</strong><span>dernière destination</span></div>
     </div>
   </section>
   <div id="error" class="error">Impossible de charger les destinations pour le moment.</div>
