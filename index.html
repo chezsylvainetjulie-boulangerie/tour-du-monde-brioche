@@ -11,7 +11,27 @@
     :root{--anthracite:#252525;--beige:#f6efe3;--kaki:#69735b;--gold:#d89a3a;--white:#fff;}
     *{box-sizing:border-box}
     body{margin:0;font-family:Arial, Helvetica, sans-serif;background:var(--beige);color:var(--anthracite)}
-    .hero{padding:24px 18px 18px;text-align:center;background:linear-gradient(180deg,#fff8ec 0%,#f6efe3 100%);border-bottom:1px solid rgba(0,0,0,.08)}
+    .hero{
+padding:40px 18px;
+text-align:center;
+background-image:
+linear-gradient(rgba(0,0,0,0.45), rgba(0,0,0,0.45)),
+url('assets/fond-brioche.jpg');
+background-size:cover;
+background-position:center;
+background-repeat:no-repeat;
+border-bottom:1px solid rgba(0,0,0,.08);
+color:white;
+}
+    .hero h1{
+color:white;
+text-shadow:0 2px 8px rgba(0,0,0,0.5);
+}
+
+.hero p{
+color:white;
+text-shadow:0 1px 6px rgba(0,0,0,0.5);
+}
     .hero h1{margin:0 auto 8px;font-size:clamp(26px,5vw,48px);line-height:1.05;max-width:980px;letter-spacing:-.02em}
     .hero p{margin:0 auto 16px;max-width:760px;font-size:clamp(15px,2.4vw,18px);line-height:1.5}
     .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
