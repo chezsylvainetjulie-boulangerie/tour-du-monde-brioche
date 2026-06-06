@@ -22,6 +22,25 @@
     .stat strong{display:block;font-size:24px;margin-bottom:2px}.stat span{font-size:13px;color:#555}
     #map{height:70vh;min-height:520px;width:100%;background:#dbe7dc}
     .footer{padding:14px;text-align:center;font-size:13px;color:#555;background:#fff8ec}
+    .story-box{
+max-width:900px;
+margin:25px auto;
+padding:25px;
+background:white;
+border-radius:20px;
+box-shadow:0 4px 16px rgba(0,0,0,.08);
+text-align:center;
+}
+
+.story-box h2{
+margin-top:0;
+color:#69735b;
+}
+
+.story-box p{
+line-height:1.7;
+margin:12px 0;
+}
     .popup-title{font-size:18px;font-weight:800;margin-bottom:6px}.popup-line{margin:4px 0}.leaflet-popup-content{font-size:14px;line-height:1.35}
     .error{display:none;background:#fff3f3;color:#8a1f1f;padding:12px;text-align:center;font-weight:700}
     @media(max-width:720px){.stats{grid-template-columns:repeat(2,1fr)}#map{height:68vh;min-height:450px}.hero{padding-top:18px}.stat strong{font-size:21px}}
@@ -31,7 +50,18 @@
   <section class="hero">
     <img src="assets/Logo.png" alt="Chez Sylvain & Julie" style="max-width:180px;margin-bottom:12px;">
     <h1>Le Tour du Monde de la Brioche Chez Sylvain & Julie</h1>
-    <p>Chaque brioche a une histoire. Depuis Le Boupère et Saint-Prouant, nos brioches voyagent grâce à vous. Aidez-nous à découvrir jusqu'où la brioche vendéenne peut voyager.</p>
+    <p style="font-weight:bold;color:#69735b;">
+🌍 Des brioches déjà recensées dans plusieurs villes et pays grâce à votre participation.
+</p>
+    <p>
+🥐 Chaque brioche a une histoire.<br><br>
+
+Depuis nos fournils du Boupère et de Saint-Prouant, nos brioches voyagent parfois à quelques kilomètres… et parfois à l'autre bout du monde.<br><br>
+
+Emportées en vacances, offertes à la famille, envoyées à des amis ou partagées lors d'événements, elles transportent avec elles un petit morceau de Vendée.<br><br>
+
+Cette carte est une aventure collective. Ajoutez votre destination et aidez-nous à découvrir jusqu'où la brioche vendéenne peut voyager.
+</p>
     <div class="actions">
       <a class="btn" href="https://docs.google.com/forms/d/e/1FAIpQLSdCtjIoUGSUuk7qID04OMYwsLqVmY8P0E2uSR549nitUjlw0A/viewform?usp=dialog" target="_blank" rel="noopener">Ajouter ma destination</a>
       <a class="btn secondary" href="https://gamma.app/docs/La-brioche-Vendeenne-qui-fait-le-tour-du-monde--jfuqj8uopuddn3z" target="_blank" rel="noopener">Découvrir le projet</a>
@@ -43,6 +73,29 @@
   <div class="stat"><strong id="stat-record">—</strong><span>pays le plus éloigné</span></div>
   <div class="stat"><strong id="stat-latest">—</strong><span>dernière destination</span></div>
     </div>
+    <div class="story-box">
+  <h2>🌍 Une aventure née en Vendée</h2>
+
+  <p>
+    Tout a commencé dans nos boutiques du Boupère et de Saint-Prouant.
+  </p>
+
+  <p>
+    Au fil des années, nous avons découvert que nos clients emportaient souvent une brioche dans leurs valises.
+  </p>
+
+  <p>
+    Certaines ont voyagé à Paris, d'autres en Espagne, au Canada ou encore en Australie.
+  </p>
+
+  <p>
+    Nous avons alors eu une idée simple : suivre ensemble le voyage de nos brioches à travers le monde.
+  </p>
+
+  <p>
+    Chaque épingle représente une histoire, un souvenir, une rencontre ou un moment partagé.
+  </p>
+</div>
   </section>
   <div id="error" class="error">Impossible de charger les destinations pour le moment.</div>
   <div id="map"></div>
