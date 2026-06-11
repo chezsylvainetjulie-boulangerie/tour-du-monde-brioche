@@ -146,6 +146,7 @@ Papa.parse(CSV_URL, {
   complete: function(results) {
     const bounds = [];
     let count = 0;
+    const participantsUniques = new Set();
     const countries = new Set();
     let record = {km:0, name:'—'};
     let latest = '—';
@@ -163,7 +164,9 @@ Papa.parse(CSV_URL, {
       const adresse = pick(row, ['Adresse complète', 'Adresse complete']) || [ville, pays].filter(Boolean).join(', ');
       const date = pick(row, ['Horodateur', 'Timestamp']);
 
-      count++;
+      if (prenom) {participantsUniques.add(prenom.toLowerCase().trim());
+                  }
+count = participantsUniques.size;
       if (pays) countries.add(pays.toLowerCase());
       latest = adresse || ville || 'Nouvelle destination';
 
