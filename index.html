@@ -138,6 +138,14 @@ function haversineKm(lat1, lon1, lat2, lon2){
 function escapeHtml(str){
   return String(str || '').replace(/[&<>'"]/g, s => ({'&':'&amp;','<':'&lt;','>':'&gt;',"'":'&#39;','"':'&quot;'}[s]));
 }
+  function normalizeName(str){
+  return String(str || '')
+    .toLowerCase()
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')
+    .replace(/\s+/g, ' ')
+    .trim();
+}
 
 Papa.parse(CSV_URL, {
   download: true,
@@ -164,8 +172,8 @@ Papa.parse(CSV_URL, {
       const adresse = pick(row, ['Adresse complète', 'Adresse complete']) || [ville, pays].filter(Boolean).join(', ');
       const date = pick(row, ['Horodateur', 'Timestamp']);
 
-      if (prenom) {participantsUniques.add(prenom.toLowerCase().trim());
-                  }
+      const participantKey = normalizeName(prenom || adresse || ville || ('destination-' + idx));
+participantsUniques.add(participantKey);
 count = participantsUniques.size;
       if (pays) countries.add(pays.toLowerCase());
       latest = adresse || ville || 'Nouvelle destination';
