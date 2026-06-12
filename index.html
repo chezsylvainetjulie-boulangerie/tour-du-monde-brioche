@@ -37,7 +37,7 @@ text-shadow:0 1px 6px rgba(0,0,0,0.5);
     .actions{display:flex;gap:10px;justify-content:center;flex-wrap:wrap;margin-top:14px}
     .btn{display:inline-block;background:var(--anthracite);color:white;padding:12px 18px;border-radius:999px;text-decoration:none;font-weight:700}
     .btn.secondary{background:var(--kaki)}
-    .stats{display:grid;grid-template-columns:repeat(5,minmax(140px,1fr));gap:10px;max-width:1200px;margin:24px auto 0;padding:0 8px;}
+    .stats{display:grid;grid-template-columns:repeat(6,minmax(140px,1fr));gap:10px;max-width:1200px;margin:24px auto 0;padding:0 8px;}
     .stat{background:white;border-radius:16px;padding:14px 10px;box-shadow:0 4px 16px rgba(0,0,0,.08)}
     .stat strong{display:block;font-size:24px;margin-bottom:2px}.stat span{font-size:13px;color:#555}
     .stat strong{color:#252525;text-shadow:none;}
@@ -74,6 +74,7 @@ Cette carte est une aventure collective. Ajoutez votre destination et aidez-nous
     </div>
     <div class="stats">
   <div class="stat"><strong id="stat-count">0</strong><span>👥 participations</span></div>
+  <div class="stat"><strong id="stat-destinations">0</strong><span>📍 destinations</span></div>
   <div class="stat"><strong id="stat-countries">0</strong><span>🌍 pays renseignés</span></div>
   <div class="stat"><strong id="stat-km">0 km</strong><span>🥾 kilomètres cumulés</span></div>
   <div class="stat"><strong id="stat-record">—</strong><span>✈️ pays le plus éloigné</span></div>
@@ -154,6 +155,7 @@ Papa.parse(CSV_URL, {
   complete: function(results) {
     const bounds = [];
     let count = 0;
+    let destinationsCount = 0;
     const participantsUniques = new Set();
     const countries = new Set();
     let record = {km:0, name:'—'};
@@ -172,9 +174,11 @@ Papa.parse(CSV_URL, {
       const adresse = pick(row, ['Adresse complète', 'Adresse complete']) || [ville, pays].filter(Boolean).join(', ');
       const date = pick(row, ['Horodateur', 'Timestamp']);
 
-      const participantKey = normalizeName(prenom || adresse || ville || ('destination-' + idx));
+     const participantKey = normalizeName(prenom || adresse || ville || ('destination-' + idx));
 participantsUniques.add(participantKey);
 count = participantsUniques.size;
+
+destinationsCount++;
       if (pays) countries.add(pays.toLowerCase());
       latest = adresse || ville || 'Nouvelle destination';
 
@@ -195,6 +199,7 @@ count = participantsUniques.size;
     });
 
     document.getElementById('stat-count').textContent = count.toLocaleString('fr-FR');
+    document.getElementById('stat-destinations').textContent = destinationsCount.toLocaleString('fr-FR');
     document.getElementById('stat-countries').textContent = countries.size.toLocaleString('fr-FR');
     document.getElementById('stat-km').textContent = Math.round(totalKm).toLocaleString('fr-FR') + ' km';
     document.getElementById('stat-record').textContent = record.name === '—' ? '—' : record.name;
